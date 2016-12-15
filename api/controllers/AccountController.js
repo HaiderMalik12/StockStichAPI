@@ -11,43 +11,43 @@ module.exports = {
   signup: function (req, res) {
 
 
-    //pick all the valid fields
+ 
     let validParams = ['first_name', 'last_name', 'email', 'password',
       'city', 'mobile', 'section_label'];
 
     //Get only validParams
     let params = _.pick(req.body, validParams),
-      firstName = params.first_name,
-      lastName = params.last_name,
-      email = params.email,
-      password = params.password,
-      city = params.city,
-      mobile = params.mobile;
+      InFirstName= params.first_name,
+      InLastName= params.last_name,
+      InEmail = params.email,
+      InPassword = params.password,
+      InCity = params.city,
+      InMobile = params.mobile;
 
     //if first_name is not provided send badRequest error
-    if (!firstName) return res.badRequest({ err: 'Invalid first_name' });
+    if (!InFirstName) return res.badRequest({ err: 'Invalid first_name' });
 
     //if last_name is not provided send badRequest error
-    if (!lastName) return res.badRequest({ err: 'Invalid last_name' });
+    if (!InLastName) return res.badRequest({ err: 'Invalid last_name' });
 
     //if email is not provided send badRequest error
-    if (!email) return res.badRequest({ err: 'Invalid email' });
+    if (!InEmail) return res.badRequest({ err: 'Invalid email' });
 
     // if email is not valid send badRequest error
-    if (!Util.emailValidator.validate(email)) return res.badRequest({ err: 'Invalid email' });
+    if (!Util.emailValidator.validate(InEmail)) return res.badRequest({ err: 'Invalid email' });
 
-    //if mobile is not provided send badRequest error
-    if (!mobile) return res.badRequest({ err: 'Invalid mobile' });
+    //if InMobile is not provided send badRequest error
+    if (!InMobile) return res.badRequest({ err: 'Invalid InMobile' });
 
     //if city is not provided send badRequest error
-    if (!city) return res.badRequest({ err: 'Invalid city' });
+    if (!InCity) return res.badRequest({ err: 'Invalid city' });
 
     // if password is not provided send badRequest error
-    if (!password) return res.badRequest({ err: 'Invalid password' });
+    if (!InPassword) return res.badRequest({ err: 'Invalid password' });
 
 
     // encrypt the password using machinepack call the encrypt password method
-    Util.getMyEncryptedPassword(password, (err, encryptedPass) => {
+    Util.getMyEncryptedPassword(InPassword, (err, encryptedPass) => {
 
       if (err) return res.badRequest({ err: 'Password must contain at least one digit and be between 6 and 15 characters long.' });
 
@@ -56,12 +56,12 @@ module.exports = {
 
       //save data in account 
       Account.create({
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
+        first_name: InFirstName,
+        last_name: InLastName,
+        email: InEmail,
         password: encryptedPass,
-        mobile: mobile,
-        city: city
+        mobile: InMobile,
+        city: InCity
       })
         .then(res.ok)
         .catch(res.negotiate);

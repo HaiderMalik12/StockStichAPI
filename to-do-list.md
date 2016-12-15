@@ -54,10 +54,44 @@
 
 18 Mentally Check the routine for errors
 
+19. Compile the Code
 
+20. Step through Code
+
+21.Test the Code
+
+22.Remove Errors from the Routine
+
+23.
  ====================================================
+## Checklist
 
-                  Signup
+
+ ## How to Use Routine Parameters
+
+ 1.  Put Paramters in input-modify order:
+ 2.  Make sure you have used all parameters:
+ 3.  Put Status or error variables last 
+ 4.  Dont use routine parameters as a working variables instead
+ use local variables
+ 5.  Document Interface assumptions about parameters
+
+  - Whether parameters are input-only, modified, or output-only
+  - Units of numeric parameters (inches, feet, meters, and so on)
+  - Meanings of status codes and error values if enumerated types aren’t used
+  - Ranges of expected values
+  - Specific values that should never appear
+
+6.  Limit the no of parameters to about 7
+7. Consider an input, modify  and output naming convention
+for parameters
+
+- i_ m_ o_
+
+
+ ===================================================
+
+                  ## Signup
 
 
  - Define the Problem the routine will solve::
@@ -72,17 +106,17 @@
  
  2. Inputs to the routine :
 
- `
+ ```js
   {
     "first_name": "Haider",
-    "last_name:"malik",
+    "last_name":"malik",
     "email":"haidermalik504@gmilcom",
     "password":"htc@123",
     "mobile":"03430051240",
     "city":"FSD"
 
   }
-  `
+  ```
 
 3. Output:
   
