@@ -17,60 +17,52 @@
 
 module.exports = function badRequest(data, options) {
 
-  // Get access to `req`, `res`, & `sails`
-  var req = this.req;
-  var res = this.res;
-  var sails = req._sails;
+    // Get access to `req`, `res`, & `sails`
+    var req = this.req;
+    var res = this.res;
+    var sails = req._sails;
 
-  // Set status code
-  res.status(400);
+    // Set status code
+    res.status(400);
 
-  // Log error to console
-  if (data !== undefined) {
-    sails.log.verbose('Sending 400 ("Bad Request") response: \n',data);
-  }
-  else sails.log.verbose('Sending 400 ("Bad Request") response');
-
-  // Only include errors in response if application environment
-  // is not set to 'production'.  In production, we shouldn't
-  // send back any identifying information about errors.
-  if (sails.config.environment === 'production' && sails.config.keepResponseErrors !== true) {
-    data = undefined;
-  }
-
-  // If the user-agent wants JSON, always respond with JSON
-  // If views are disabled, revert to json
-  if (req.wantsJSON || sails.config.hooks.views === false) {
-    return res.jsonx(data);
-  }
-
-  // If second argument is a string, we take that to mean it refers to a view.
-  // If it was omitted, use an empty object (`{}`)
-  options = (typeof options === 'string') ? { view: options } : options || {};
-
-  // Attempt to prettify data for views, if it's a non-error object
-  var viewData = data;
-  if (!(viewData instanceof Error) && 'object' == typeof viewData) {
-    try {
-      viewData = require('util').inspect(data, {depth: null});
+    // Log error to console
+    if (data !== undefined) {
+        sails.log.verbose('Sending 400 ("Bad Request") response: \n', data);
     }
-    catch(e) {
-      viewData = undefined;
+    else {
+        sails.log.verbose('Sending 400 ("Bad Request") response');
     }
-  }
 
-  // If a view was provided in options, serve it.
-  // Otherwise try to guess an appropriate view, or if that doesn't
-  // work, just send JSON.
-  if (options.view) {
-    return res.view(options.view, { data: viewData, title: 'Bad Request' });
-  }
+    if(!_.isUndefined(data && data.error)){
+        data.err = data.error;
+        delete data.error;
+    }
+    else if(!_.isUndefined(data && data.message)){
+        data.err = data.message;
+        delete data.message;
+    }
 
-  // If no second argument provided, try to serve the implied view,
-  // but fall back to sending JSON(P) if no view can be inferred.
-  else return res.guessView({ data: viewData, title: 'Bad Request' }, function couldNotGuessView () {
-    return res.jsonx(data);
-  });
+    if(typeof data == 'string')
+        data = {err: data};
+
+    // Only include errors in response if application environment
+    // is not set to 'production'.  In production, we shouldn't
+    // send back any identifying information about errors.
+    // TODO:: review this. do we want to provide error information in production mode?
+    //if (sails.config.environment === 'production') {
+    //    data = undefined;
+    //}
+    //
+    //if (data && data.model) {
+    //    delete data.model;
+    //}
+
+    // Serve data as JSON(P) if appropriate
+    if (req.param('callback')) {
+        return res.jsonp(data);
+    } else {
+        return res.json(data);
+    }
 
 };
 

@@ -1,18 +1,18 @@
 /**
- * 500 (Server Error) Response
+ * 401 (Unauthorized) Handler
  *
  * Usage:
- * return res.serverError();
- * return res.serverError(err);
- * return res.serverError(err, 'some/specific/error/view');
+ * return res.unauthorized();
+ * return res.unauthorized(err);
+ * return res.unauthorized(err, 'some/specific/forbidden/view');
  *
- * NOTE:
- * If something throws in a policy or controller, or an internal
- * error is encountered, Sails will call `res.serverError()`
- * automatically.
+ * e.g.:
+ * ```
+ * return res.unauthorized('Access denied.');
+ * ```
  */
 
-module.exports = function serverError(data, options) {
+module.exports = function unauthorized(data, options) {
 
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
@@ -20,13 +20,13 @@ module.exports = function serverError(data, options) {
     var sails = req._sails;
 
     // Set status code
-    res.status(500);
+    res.status(401);
 
     // Log error to console
     if (data !== undefined) {
-        sails.log.error('Sending 500 ("Server Error") response: \n', data);
+        sails.log.verbose('Sending 401 ("Unauthorized") response: \n', data);
     } else {
-        sails.log.error('Sending empty 500 ("Server Error") response');
+        sails.log.verbose('Sending 401 ("Unauthorized") response');
     }
     if(!_.isUndefined(data.error)){
         data.err = data.error;
@@ -39,9 +39,9 @@ module.exports = function serverError(data, options) {
     // Only include errors in response if application environment
     // is not set to 'production'.  In production, we shouldn't
     // send back any identifying information about errors.
-    if (sails.config.environment === 'production') {
-        data = undefined;
-    }
+    //if (sails.config.environment === 'production') {
+    //    data = undefined;
+    //}
 
     // Serve data as JSON(P) if appropriate
     if (req.param('callback')) {
@@ -49,6 +49,5 @@ module.exports = function serverError(data, options) {
     } else {
         return res.json(data);
     }
-
 };
 

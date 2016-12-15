@@ -12,8 +12,20 @@ module.exports = {
      
    
     //pick all the valid fields
+    let validParams = ['first_name', 'last_name', 'email', 'password',
+                       'city', 'mobile', 'section_label'];
+
+    //Get only validParams
+    let params  = _.pick(req.body, validParams),
+        firstName  = params.first_name,
+        lastName = params.last_name,
+        email = params.email,
+        password = params.password,
+        city = params.city,
+        mobile = params.mobile;
 
    //if first_name is not provided send badRequest error
+   if(!firstName) return res.badRequest({err:'Invalid first_name'})
 
    //if last_name is not provided send badRequest error
 

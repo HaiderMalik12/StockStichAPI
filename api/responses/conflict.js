@@ -1,18 +1,21 @@
 /**
- * 500 (Server Error) Response
+ * 400 (Bad Request) Handler
  *
  * Usage:
- * return res.serverError();
- * return res.serverError(err);
- * return res.serverError(err, 'some/specific/error/view');
+ * return res.badRequest();
+ * return res.badRequest(data);
+ * return res.badRequest(data, 'some/specific/badRequest/view');
  *
- * NOTE:
- * If something throws in a policy or controller, or an internal
- * error is encountered, Sails will call `res.serverError()`
- * automatically.
+ * e.g.:
+ * ```
+ * return res.badRequest(
+ *   'Please choose a valid `password` (6-12 characters)',
+ *   'trial/signup'
+ * );
+ * ```
  */
 
-module.exports = function serverError(data, options) {
+module.exports = function conflict(data, options) {
 
     // Get access to `req`, `res`, & `sails`
     var req = this.req;
@@ -20,14 +23,16 @@ module.exports = function serverError(data, options) {
     var sails = req._sails;
 
     // Set status code
-    res.status(500);
+    res.status(409);
 
     // Log error to console
     if (data !== undefined) {
-        sails.log.error('Sending 500 ("Server Error") response: \n', data);
-    } else {
-        sails.log.error('Sending empty 500 ("Server Error") response');
+        sails.log.verbose('Sending 409 ("Conflict") response: \n', data);
     }
+    else {
+        sails.log.verbose('Sending 409 ("Conflict") response');
+    }
+
     if(!_.isUndefined(data.error)){
         data.err = data.error;
         delete data.error;
@@ -36,11 +41,16 @@ module.exports = function serverError(data, options) {
     if(typeof data == 'string')
         data = {err: data};
 
+
     // Only include errors in response if application environment
     // is not set to 'production'.  In production, we shouldn't
     // send back any identifying information about errors.
     if (sails.config.environment === 'production') {
         data = undefined;
+    }
+    
+    if (data.model) {
+        delete data.model;
     }
 
     // Serve data as JSON(P) if appropriate

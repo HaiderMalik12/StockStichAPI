@@ -38,6 +38,23 @@
  
  11. Research Algorithms and Data Type
 
+ 12. Write Pseudocode:
+
+13. Think about data
+
+14. Check the Pseudocode:
+
+15. Iterate Pseudocode if not best:
+
+15. Write Routine Declration
+
+16.Fill the code bellow each comment:
+
+17. Check whether the code should be further factored or not:
+
+18 Mentally Check the routine for errors
+
+
  ====================================================
 
                   Signup
