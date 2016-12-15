@@ -7,9 +7,9 @@ module.exports.getMyEncryptedPassword = function (password, callback) {
   var passwordReg = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9\.\-\_\!]+){6,15}$/g;
 
   if (!passwordReg.test(password)) {
-    return callback(false, 'Password must contain at least one digit and be between 6 and 15 characters long.');
+    return callback({err:'Password must contain at least one digit and be between 6 and 15 characters long.'},null);
   } else if (password.length < 6 || password.length > 15) {
-    return callback(false, 'Password must be in between 6 and 15 characters');
+    return callback({err:'Password must be in between 6 and 15 characters'},null);
   }
 
   require('machinepack-passwords').encryptPassword({

@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "bluebird": "^3.4.6",
     "ejs": "2.3.4",
     "email-validator": "^1.0.7",
     "grunt": "1.0.1",

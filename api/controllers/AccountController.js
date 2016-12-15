@@ -42,25 +42,32 @@ module.exports = {
     //if city is not provided send badRequest error
     if (!city) return res.badRequest({ err: 'Invalid city' });
 
-   // if password is not provided send badRequest error
-   if (!password) return res.badRequest({ err: 'Invalid password' });
+    // if password is not provided send badRequest error
+    if (!password) return res.badRequest({ err: 'Invalid password' });
 
 
     // encrypt the password using machinepack call the encrypt password method
-     Util.getMyEncryptedPassword(password,(err,encryptedPass) => {
+    Util.getMyEncryptedPassword(password, (err, encryptedPass) => {
 
-       sails.log(encryptedPass);
+      if (err) return res.badRequest({ err: 'Password must contain at least one digit and be between 6 and 15 characters long.' });
 
-      if(err) return res.badRequest({err:'Your password is not valid'});
+      if (!encryptedPass) return res.badRequest({ err: 'Password must contain at least one digit and be between 6 and 15 characters long.' });
 
-       params.password = encryptedPass;
 
-    //save data in account 
+      //save data in account 
+      Account.create({
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: encryptedPass,
+        mobile: mobile,
+        city: city
+      })
+        .then(res.ok)
+        .catch(res.negotiate);
+    
 
-    //return new account back.
-    return res.ok(encryptedPass);
-
-  });
+    });
   }
 
 }
