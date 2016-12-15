@@ -25,12 +25,13 @@ module.exports = {
         mobile = params.mobile;
 
    //if first_name is not provided send badRequest error
-   if(!firstName) return res.badRequest({err:'Invalid first_name'})
+   if(!firstName) return res.badRequest({err:'Invalid first_name'});
 
    //if last_name is not provided send badRequest error
+    if(!lastName) return res.badRequest({err:'Invalid last_name'});
 
    //if email is not provided send badRequest error
-
+   if(!email) return res.badRequest({err:'Invalid email'});
    // if email is not valid send badRequest error
 
    //if mobile is not provided send badRequest error
@@ -44,7 +45,7 @@ module.exports = {
    //save data in account 
 
    //return new account back.
-
+ return res.ok(params);
  
 
     }

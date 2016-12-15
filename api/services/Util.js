@@ -1,3 +1,6 @@
+  "use strict";
+  const validator = require("email-validator");
+
 module.exports.getEncryptedPassword = function (password, cb) {
 
   var passwordReg = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9\.\-\_\!]+){6,15}$/g;
@@ -21,4 +24,13 @@ module.exports.getEncryptedPassword = function (password, cb) {
     },
     success: cb
   });
+};
+
+
+//validate email
+module.exports.emailValidator = {
+
+  validate: function (email) {
+    return validator.validate(email) ? true : false;
+  }
 };
