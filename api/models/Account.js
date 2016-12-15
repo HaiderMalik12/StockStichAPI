@@ -48,6 +48,9 @@ module.exports = {
     'mobile': {
       'type': 'string'
     },
+    'city':{
+      'type':'string'
+    },
     'status_id': {
       'type': 'integer',
       'required': true,
