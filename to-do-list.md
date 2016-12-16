@@ -83,10 +83,14 @@
   - Specific values that should never appear
 
 6.  Limit the no of parameters to about 7
-7. Consider an input, modify  and output naming convention
+7.  Consider an input, modify  and output naming convention
 for parameters
+8.  Pass the variables or objects that the routine needs to 
+maintain its Interface abstraction.
 
-- i_ m_ o_
+9.  Use Named Paramters
+10. Make sure actual parameters match formal parameters.
+
 
 
  ===================================================
