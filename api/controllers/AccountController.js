@@ -128,6 +128,7 @@ module.exports = {
 
           let rsp = {
             user: user,
+            comapny:company,
             token: jwToken.issue({
               id: user.id,
               originalCompany: company,
