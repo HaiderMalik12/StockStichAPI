@@ -39,8 +39,9 @@ module.exports.routes = {
 
    //Account
 
-   'POST /signup':'AccountController.create'
-  
+   'POST /signup':'AccountController.create',
+   'POST /login':'AccountController.login'
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

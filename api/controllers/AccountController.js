@@ -3,7 +3,7 @@ module.exports = {
   /**
    * This routine will create a new account for user.
    * User will have to create new account before checkout the process
-   * 
+   *
    * @param  {object} req
    * @param  {object} res
    * @return {object} msg - your account has been created successfully!
@@ -11,7 +11,7 @@ module.exports = {
   signup: function (req, res) {
 
 
- 
+
     let validParams = ['first_name', 'last_name', 'email', 'password',
       'city', 'mobile', 'section_label'];
 
@@ -54,7 +54,7 @@ module.exports = {
       if (!encryptedPass) return res.badRequest({ err: 'Password must contain at least one digit and be between 6 and 15 characters long.' });
 
 
-      //save data in account 
+      //save data in account
       Account.create({
         first_name: InFirstName,
         last_name: InLastName,
@@ -65,9 +65,22 @@ module.exports = {
       })
         .then(res.ok)
         .catch(res.negotiate);
-    
+
 
     });
+  },
+
+  /**
+   * This routine will handle the login process.
+   * Company can login to his account to add products to customer
+   * User must have logged in to his account to purchase products
+   * @param req
+   * @param res
+   * @return {*}
+   */
+  login:function (req,res) {
+
+
   }
 
 }

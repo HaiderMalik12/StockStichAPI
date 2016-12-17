@@ -4,15 +4,15 @@
 
 
 
-■ Design the routine.
-■ Code the routine.
-■ Check the code.
-■ Clean up loose ends.
-■ Repeat as needed.
+- Design the routine.
+- Code the routine.
+- Check the code.
+- Clean up loose ends.
+- Repeat as needed.
 
 ==================== BluePrint   ====================
 
-1. Design the Routine ::
+### Design the Routine
 
 - Define the Problem the routine will solve::
 
@@ -172,3 +172,95 @@ valid email
 9. Think about Efficieny:
 
 10. Research Algorithms and Data Type:
+
+
+#Login
+
+- Define the Problem the routine will solve::
+
+ 1. The information the routine will hide
+ 
+ - This routine will hide the login process. If current account is user
+ then show products .If current account is company then show Dashboard to user
+ 
+ - This routine will login to account and send back token with details
+
+ 2. Inputs to the routine 
+  
+  ```
+   {
+   
+    "email":"haidermalik504@gmail.com",
+    "password":"yastdy12@12"
+   
+   }
+  ```
+
+ 3. Outputs from the routine.
+ 
+  ```
+   {
+    "company":{},
+    "account":{}
+    "token":""
+   }
+  ```
+
+ 4. Preconditions
+
+  - Company must have account
+  - Company must be registered
+   
+  
+ 5. PostConditions
+
+ - token property must be added to req object
+
+ 6. Name of Routine
+ 
+ - login
+
+ 7. Decide how to test routine
+
+ - Is token generated?
+ - Has account found ?
+ - Has Company found ?
+ 
+
+ 8. Research Functionalities available in standard Library
+ 
+ - Existing System
+
+ 9.Think about error handling:
+ 
+ - if invalid field then send 400
+ - if account not found send 404
+ - if company not found send 404
+
+10. Think about Efficieny:
+ 
+ 11. Research Algorithms and Data Type
+
+ 12. Write Pseudocode:
+
+13. Think about data:
+
+14. Check the Pseudocode:
+
+15. Iterate Pseudocode if not best:
+
+15. Write Routine Declration
+
+16.Fill the code bellow each comment:
+
+17. Check whether the code should be further factored or not:
+
+18 Mentally Check the routine for errors
+
+19. Compile the Code
+
+20. Step through Code
+
+21.Test the Code
+
+22.Remove Errors from the Routine

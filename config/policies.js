@@ -49,7 +49,10 @@ module.exports.policies = {
 		// before letting any users feed our rabbits
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
+
+  //Account
   AccountController: {
     'signup': true,
+    'login':true
   },
 };
