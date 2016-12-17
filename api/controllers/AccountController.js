@@ -101,10 +101,6 @@ module.exports = {
       return res.badRequest({error: 'Email is not valid'});
     }
 
-
-    //find the Account by email and status_id not equal to DELETED
-
-
     Account.findOne({
       email: inEmail,
       status_id: {'!': Status.DELETED}
@@ -114,13 +110,10 @@ module.exports = {
         if (!user) return res.unauthorized({err: 'No user found'});
 
         _user = user;
-        // If account found successfully then match the password
         return user;
 
       }).then(user => {
 
-
-      // match the password by calling checkpassword
       return Account.checkPassword(inPassword, user)
 
 
@@ -129,10 +122,8 @@ module.exports = {
 
         if (!isMatched) return res.unautorized({err: 'Your password or email does not match'});
 
-
         let promises = [];
 
-        //If password matched and user has company
         if (isMatched === true && _user.has_company) {
 
           return AccountService.getTokenWithComp(_user,inRemember);
