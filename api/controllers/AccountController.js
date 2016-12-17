@@ -79,12 +79,16 @@ module.exports = {
    */
   login: function (req, res) {
 
-    let validParams = ['email', 'password'];
+    let validParams = ['email', 'password','remember'];
 
     //Get only validParams
     let params = _.pick(req.body, validParams),
       inEmail = params.email,
+      inRemember = params.remember,
       inPassword = params.password;
+
+
+    let _user = {};
 
 
     if (!inEmail) return res.badRequest({err: 'Invalid email'});
@@ -101,113 +105,49 @@ module.exports = {
     //find the Account by email and status_id not equal to DELETED
 
 
-      Account.findOne({
-        email: inEmail,
-        status_id: {'!': Status.DELETED}
-      })
-        .then(user => {
+    Account.findOne({
+      email: inEmail,
+      status_id: {'!': Status.DELETED}
+    })
+      .then(user => {
 
-       if(!user) return res.unauthorized({err:'No user found'});
+        if (!user) return res.unauthorized({err: 'No user found'});
 
-      // If account found successfully then match the password
-          return user;
+        _user = user;
+        // If account found successfully then match the password
+        return user;
 
-        }).then(user => {
+      }).then(user => {
 
 
       // match the password by calling checkpassword
-        return Account.checkPassword(inPassword,user)
+      return Account.checkPassword(inPassword, user)
 
 
-      })
-        .then(isMatched => {
+    })
+      .then(isMatched => {
 
-          if(!isMatched) return res.unautorized({err:'Your password or email does not match'});
-
-         return res.ok({isMatched});
-
-     //If password matched and user has company
-        }).catch(res.unauthorized);
-
-      //find the comapny status_id not equal to DELETED
-
-      //if Company found then generate a jwttoken
-
-      // generate a response message and send back to user
-
-     //if password matched and user does not belong to some company
-
-       //generate jwt token with user
-
-       //generate a response message with only user and send back to user.
+        if (!isMatched) return res.unautorized({err: 'Your password or email does not match'});
 
 
+        let promises = [];
 
-  //   Account.findOne({
-  //     email: inEmail,
-  //     status_id: {'!': Status.DELETED}
-  //   }).exec((err, user) => {
-  //
-  //      let rsp = {};
-  //
-  //     if (!user) {
-  //       return res.unauthorized({err: 'Invalid email or password'});
-  //     }
-  //
-  //
-  //     Account.checkPassword(inPassword, user, function (err, valid) {
-  //
-  //       if (err) {
-  //         return res.unauthorized({err: 'Invalid email or password'});
-  //       }
-  //
-  //       if (!valid) {
-  //         return res.unauthorized({err: 'Invalid email or password'});
-  //       }
-  //
-  //   if(user.has_company) {
-  //
-  //     Company
-  //       .findOne({account: user.id})
-  //       .exec(err, company => {
-  //
-  //         if (!company || err) return res.unauthorized({err: 'Your company is not registered'});
-  //
-  //         let tokenExpiry = !req.param('remember') || req.param('remember') == 'false' ? '1 day' : '7 days';
-  //
-  //          rsp = {
-  //             user: user,
-  //             comapny: company,
-  //             token: jwToken.issue({
-  //               id: user.id,
-  //               originalCompany: company,
-  //               company: company.id
-  //             }, tokenExpiry)
-  //           };
-  //
-  //       });
-  //   }
-  //
-  //       else
-  //       {
-  //         let tokenExpiry = !req.param('remember') || req.param('remember') == 'false' ? '1 day' : '7 days';
-  //
-  //         let rsp = {
-  //           user: user,
-  //           token: jwToken.issue({
-  //             id: user.id
-  //           }, tokenExpiry)
-  //         };
-  //
-  //       }
-  //
-  //   return res.ok(rsp);
-  //
-  //
-  // });
-  //
-  //
-  //   });
+        //If password matched and user has company
+        if (isMatched === true && _user.has_company) {
+
+          return AccountService.getTokenWithComp(_user,inRemember);
+
+        } else {
+
+          return AccountService.getToken(_user,inRemember);
+        }
+
+      }).then(results => {
+
+        return res.ok(results);
+    })
+      .catch(res.unauthorized);
+
   }
 
 }
