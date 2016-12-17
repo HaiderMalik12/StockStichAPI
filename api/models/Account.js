@@ -56,6 +56,10 @@ module.exports = {
       'required': true,
       'defaultsTo': 1
     },
+    has_company:{
+      'type': 'boolean',
+      'defaultsTo': false
+    },
 
     created_at: {
       type: 'datetime',
@@ -84,23 +88,28 @@ module.exports = {
       return obj;
     }
   },
-  checkPassword: function (password, user, cb) {
+  checkPassword: function (password, user) {
+
+    return new sails.bluebird( (resolve,reject) => {
+
+
     require('machinepack-passwords').checkPassword({
       passwordAttempt: password,
       encryptedPassword: user.password
     }).exec({
       // An unexpected error occurred.
       error: function (err) {
-        return cb(err, false);
+        return resolve({err});
       },
       // Password attempt does not match already-encrypted version
       incorrect: function () {
-        return cb(null, false);
+        return resolve(false);
       },
       // OK.
       success: function () {
-        return cb(null, true);
+        return resolve(true);
       }
+    });
     });
   }
 };

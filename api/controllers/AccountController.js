@@ -97,55 +97,117 @@ module.exports = {
       return res.badRequest({error: 'Email is not valid'});
     }
 
-    Account.findOne({
-      email: inEmail,
-      status_id: {'!': Status.DELETED}
-    }).exec((err, user) => {
 
-      if (!user) {
-        return res.unauthorized({err: 'Invalid email or password'});
-      }
-
-      Company
-        .findOne({account:user.id})
-        .then(company => {
-
-       if(!company) return res.unauthorized({err: 'Your company is not registered'});
-
-      Account.checkPassword(inPassword, user, function (err, valid) {
-
-        if (err) {
-          return res.unauthorized({err: 'Invalid email or password'});
-        }
-
-        if (!valid) {
-          return res.unauthorized({err: 'Invalid email or password'});
-        }
-        else {
+    //find the Account by email and status_id not equal to DELETED
 
 
-          let tokenExpiry = !req.param('remember') || req.param('remember') == 'false' ? '1 day' : '7 days';
+      Account.findOne({
+        email: inEmail,
+        status_id: {'!': Status.DELETED}
+      })
+        .then(user => {
 
-          let rsp = {
-            user: user,
-            comapny:company,
-            token: jwToken.issue({
-              id: user.id,
-              originalCompany: company,
-              company: company.id
-            }, tokenExpiry)
-          };
+       if(!user) return res.unauthorized({err:'No user found'});
 
+      // If account found successfully then match the password
+          return user;
 
-          res.ok(rsp);
+        }).then(user => {
 
 
-        }
-      });
+      // match the password by calling checkpassword
+        return Account.checkPassword(inPassword,user)
 
-        }).catch()
-    });
 
+      })
+        .then(isMatched => {
+
+          if(!isMatched) return res.unautorized({err:'Your password or email does not match'});
+
+         return res.ok({isMatched});
+
+     //If password matched and user has company
+        }).catch(res.unauthorized);
+
+      //find the comapny status_id not equal to DELETED
+
+      //if Company found then generate a jwttoken
+
+      // generate a response message and send back to user
+
+     //if password matched and user does not belong to some company
+
+       //generate jwt token with user
+
+       //generate a response message with only user and send back to user.
+
+
+
+  //   Account.findOne({
+  //     email: inEmail,
+  //     status_id: {'!': Status.DELETED}
+  //   }).exec((err, user) => {
+  //
+  //      let rsp = {};
+  //
+  //     if (!user) {
+  //       return res.unauthorized({err: 'Invalid email or password'});
+  //     }
+  //
+  //
+  //     Account.checkPassword(inPassword, user, function (err, valid) {
+  //
+  //       if (err) {
+  //         return res.unauthorized({err: 'Invalid email or password'});
+  //       }
+  //
+  //       if (!valid) {
+  //         return res.unauthorized({err: 'Invalid email or password'});
+  //       }
+  //
+  //   if(user.has_company) {
+  //
+  //     Company
+  //       .findOne({account: user.id})
+  //       .exec(err, company => {
+  //
+  //         if (!company || err) return res.unauthorized({err: 'Your company is not registered'});
+  //
+  //         let tokenExpiry = !req.param('remember') || req.param('remember') == 'false' ? '1 day' : '7 days';
+  //
+  //          rsp = {
+  //             user: user,
+  //             comapny: company,
+  //             token: jwToken.issue({
+  //               id: user.id,
+  //               originalCompany: company,
+  //               company: company.id
+  //             }, tokenExpiry)
+  //           };
+  //
+  //       });
+  //   }
+  //
+  //       else
+  //       {
+  //         let tokenExpiry = !req.param('remember') || req.param('remember') == 'false' ? '1 day' : '7 days';
+  //
+  //         let rsp = {
+  //           user: user,
+  //           token: jwToken.issue({
+  //             id: user.id
+  //           }, tokenExpiry)
+  //         };
+  //
+  //       }
+  //
+  //   return res.ok(rsp);
+  //
+  //
+  // });
+  //
+  //
+  //   });
   }
 
 }
