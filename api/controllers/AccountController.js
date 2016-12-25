@@ -79,7 +79,7 @@ module.exports = {
    */
   login: function (req, res) {
 
-    let validParams = ['email', 'password','remember'];
+    let validParams = ['email', 'password', 'remember'];
 
     //Get only validParams
     let params = _.pick(req.body, validParams),
@@ -110,35 +110,36 @@ module.exports = {
         if (!user) return res.unauthorized({err: 'No user found'});
 
         _user = user;
-        return user;
-
-      }).then(user => {
-
-      return Account.checkPassword(inPassword, user)
 
 
-    })
-      .then(isMatched => {
+        Account.checkPassword(inPassword, user)
+          .then(isMatched => {
 
-        if (!isMatched) return res.unautorized({err: 'Your password or email does not match'});
 
-        let promises = [];
+            if (!isMatched) return res.unautorized({err: 'Your password or email does not match'});
 
-        if (isMatched === true && _user.has_company) {
 
-          return AccountService.getTokenWithComp(_user,inRemember);
+            if (isMatched === true && _user.has_company) {
 
-        } else {
+              return AccountService.getTokenWithComp(_user, inRemember);
 
-          return AccountService.getToken(_user,inRemember);
-        }
+            } else {
 
-      }).then(results => {
+              return AccountService.getToken(_user, inRemember);
+            }
 
-        return res.ok(results);
-    })
-      .catch(res.unauthorized);
+          }).then(results => {
+
+          return res.ok(results);
+        })
+          .catch(error => {
+            return res.unauthorized({err: error});
+          });
+
+
+      }).catch(res.unauthorized);
+
 
   }
 
-}
+};
