@@ -33,6 +33,7 @@ module.exports = {
             token: jwToken.issue({
               id: inUser.id,
               originalCompany: company,
+              user:inUser,
               company: company.id
             }, tokenExpiry)
           };
